@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'">
+  <title>Workforce Monitor</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #0f172a; color: #e2e8f0; min-height: 100vh; padding: 24px;
+    }
+    .card { max-width: 432px; margin: 0 auto; }
+    h1 { font-size: 1.4rem; color: #fff; margin-bottom: 4px; }
+    .subtitle { color: #94a3b8; font-size: 0.85rem; margin-bottom: 20px; }
+    .disclosure {
+      background: #1e293b; border: 1px solid #334155; border-radius: 8px;
+      padding: 16px; margin-bottom: 16px; font-size: 0.85rem; line-height: 1.55; color: #cbd5e1;
+    }
+    .disclosure strong { color: #fff; }
+    .disclosure ul { margin: 10px 0 0 18px; }
+    .disclosure li { margin-bottom: 4px; }
+    .form-group { margin-bottom: 14px; }
+    label { display: block; margin-bottom: 6px; color: #94a3b8; font-size: 0.8rem; }
+    input {
+      width: 100%; padding: 10px 12px; border: 1px solid #334155; border-radius: 6px;
+      background: #0f172a; color: #e2e8f0; font-size: 0.9rem;
+    }
+    input:focus { outline: none; border-color: #3b82f6; }
+    .consent-row { display: flex; align-items: flex-start; gap: 8px; margin: 14px 0; font-size: 0.82rem; color: #cbd5e1; }
+    .consent-row input { width: auto; margin-top: 2px; }
+    .btn {
+      width: 100%; background: #2563eb; color: #fff; border: none; padding: 12px;
+      border-radius: 6px; cursor: pointer; font-size: 0.9rem; font-weight: 600; transition: background .15s;
+    }
+    .btn:hover { background: #1d4ed8; }
+    .btn:disabled { background: #334155; cursor: not-allowed; }
+    .btn.secondary { background: #334155; margin-top: 8px; }
+    .btn.secondary:hover { background: #475569; }
+    .btn.danger { background: #b91c1c; }
+    .btn.danger:hover { background: #991b1b; }
+    .status { background: #1e293b; border: 1px solid #334155; border-radius: 8px; padding: 16px; margin-bottom: 12px; }
+    .status-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #334155; font-size: 0.88rem; }
+    .status-item:last-child { border-bottom: none; }
+    .status-label { color: #94a3b8; }
+    .status-value { color: #4ade80; font-weight: 500; }
+    .status-value.paused { color: #fbbf24; }
+    .badge { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 0.7rem; font-weight: 600; }
+    .badge.on { background: #14532d; color: #4ade80; }
+    .badge.off { background: #78350f; color: #fbbf24; }
+    .hidden { display: none; }
+    .note { font-size: 0.72rem; color: #64748b; margin-top: 12px; text-align: center; }
+    .err { color: #f87171; font-size: 0.8rem; margin-top: 8px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <!-- CONSENT VIEW -->
+    <div id="consentView" class="hidden">
+      <h1>Workforce Monitor</h1>
+      <p class="subtitle">This device has been enrolled in workplace monitoring.</p>
+      <div class="disclosure">
+        <strong>Please read before continuing.</strong> While active, this application will:
+        <ul>
+          <li>Capture periodic screenshots of this screen</li>
+          <li>Record active vs. idle time (no keystrokes are logged)</li>
+          <li>Record clock-in / clock-out session times</li>
+        </ul>
+        <p style="margin-top:10px">Data is sent to your organization's administrators. You can pause
+        monitoring or quit the app at any time from the tray icon.</p>
+      </div>
+      <div class="form-group">
+        <label for="name">Your name</label>
+        <input id="name" type="text" placeholder="e.g. Jordan Rivera" autocomplete="off">
+      </div>
+      <div class="form-group">
+        <label for="email">Work email (optional)</label>
+        <input id="email" type="email" placeholder="e.g. jordan@company.com" autocomplete="off">
+      </div>
+      <label class="consent-row">
+        <input id="consentCheck" type="checkbox">
+        <span>I understand that this device will be monitored as described above and I consent to it.</span>
+      </label>
+      <button id="consentBtn" class="btn" disabled>Start Monitoring</button>
+      <div id="consentErr" class="err hidden"></div>
+      <p class="note" id="deviceNote"></p>
+    </div>
+
+    <!-- STATUS VIEW -->
+    <div id="statusView" class="hidden">
+      <h1>Workforce Monitor</h1>
+      <p class="subtitle">Monitoring is enabled on this device. <span id="stateBadge" class="badge on">ACTIVE</span></p>
+      <div class="status">
+        <div class="status-item"><span class="status-label">Status</span><span class="status-value" id="statusValue">Active</span></div>
+        <div class="status-item"><span class="status-label">Currently</span><span class="status-value" id="activeValue">—</span></div>
+        <div class="status-item"><span class="status-label">Screenshots captured</span><span class="status-value" id="capturesValue">0</span></div>
+        <div class="status-item"><span class="status-label">Last capture</span><span class="status-value" id="lastCapture">—</span></div>
+        <div class="status-item"><span class="status-label">Session time</span><span class="status-value" id="sessionTime">—</span></div>
+        <div class="status-item"><span class="status-label">Backend</span><span class="status-value" id="backendValue">—</span></div>
+      </div>
+      <button id="pauseBtn" class="btn secondary">Pause Monitoring</button>
+      <button id="quitBtn" class="btn danger">Quit Agent</button>
+      <p class="note" id="deviceNote2"></p>
+    </div>
+  </div>
+
+  <script>
+    const api = window.electronAPI;
+    const $ = (id) => document.getElementById(id);
+
+    function show(view) {
+      $('consentView').classList.toggle('hidden', view !== 'consent');
+      $('statusView').classList.toggle('hidden', view !== 'status');
+    }
+
+    async function render() {
+      const state = await api.getState();
+      $('deviceNote').textContent = 'Device ID: ' + state.deviceId;
+      $('deviceNote2').textContent = 'Device ID: ' + state.deviceId;
+      if (state.consentGiven) {
+        show('status');
+        refreshStatus(state);
+      } else {
+        show('consent');
+      }
+    }
+
+    async function refreshStatus(state) {
+      try {
+        const s = await api.getStatus();
+        const active = s.monitoring;
+        $('statusValue').textContent = active ? 'Active' : 'Paused';
+        $('statusValue').className = 'status-value' + (active ? '' : ' paused');
+        $('stateBadge').textContent = active ? 'ACTIVE' : 'PAUSED';
+        $('stateBadge').className = 'badge ' + (active ? 'on' : 'off');
+        $('pauseBtn').textContent = active ? 'Pause Monitoring' : 'Resume Monitoring';
+
+        if (s.activityTracker) {
+          $('activeValue').textContent = s.activityTracker.isActive ? 'Active at keyboard' : 'Idle';
+        }
+        if (s.screenCapture) {
+          $('capturesValue').textContent = s.screenCapture.totalCaptures ?? 0;
+          $('lastCapture').textContent = s.screenCapture.lastCaptureAt
+            ? new Date(s.screenCapture.lastCaptureAt).toLocaleTimeString() : '—';
+        }
+        if (s.timeLogger?.clockInAt) {
+          const mins = Math.floor((Date.now() - new Date(s.timeLogger.clockInAt).getTime()) / 60000);
+          $('sessionTime').textContent = mins + ' min';
+        }
+        const st = state || await api.getState();
+        $('backendValue').textContent = st.backendEnabled ? 'Connected' : 'Local only';
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    // Consent form wiring
+    $('consentCheck').addEventListener('change', (e) => {
+      $('consentBtn').disabled = !e.target.checked;
+    });
+
+    $('consentBtn').addEventListener('click', async () => {
+      const name = $('name').value.trim();
+      if (!name) { showErr('Please enter your name.'); return; }
+      $('consentBtn').disabled = true;
+      $('consentBtn').textContent = 'Starting…';
+      try {
+        await api.giveConsent({ name, email: $('email').value.trim() || undefined });
+        await render();
+      } catch (e) {
+        showErr('Could not start monitoring. ' + (e?.message || ''));
+        $('consentBtn').disabled = false;
+        $('consentBtn').textContent = 'Start Monitoring';
+      }
+    });
+
+    function showErr(msg) {
+      const el = $('consentErr');
+      el.textContent = msg; el.classList.remove('hidden');
+    }
+
+    $('pauseBtn').addEventListener('click', async () => {
+      const s = await api.getStatus();
+      if (s.monitoring) await api.pauseMonitoring(); else await api.resumeMonitoring();
+      await refreshStatus();
+    });
+
+    $('quitBtn').addEventListener('click', async () => {
+      if (confirm('Quit the monitoring agent?')) await api.quit();
+    });
+
+    render();
+    setInterval(() => { if (!$('statusView').classList.contains('hidden')) refreshStatus(); }, 4000);
+  </script>
+</body>
+</html>

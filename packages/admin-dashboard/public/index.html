@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexusShift - Workforce Management</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #8b5cf6;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --dark: #1f2937;
+            --light: #f3f4f6;
+            --white: #ffffff;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 24px 32px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo {
+            font-size: 48px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .title h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--dark);
+            margin: 0;
+        }
+
+        .title p {
+            color: var(--gray-700);
+            font-size: 14px;
+            margin: 4px 0 0 0;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            color: var(--gray-700);
+            font-size: 14px;
+            margin-top: 4px;
+        }
+
+        /* Main Content */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 24px;
+        }
+
+        @media (max-width: 1024px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Workers Section */
+        .workers-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+        }
+
+        .btn-secondary {
+            background: var(--gray-200);
+            color: var(--dark);
+        }
+
+        .btn-secondary:hover {
+            background: var(--gray-300);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #059669;
+        }
+
+        /* Worker List */
+        .worker-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .worker-card {
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .worker-card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .worker-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .worker-info {
+            flex: 1;
+        }
+
+        .worker-name {
+            font-weight: 600;
+            color: var(--dark);
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+
+        .worker-email {
+            color: var(--gray-700);
+            font-size: 14px;
+        }
+
+        .worker-status {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .status-online {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .status-offline {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .status-idle {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .worker-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            border: none;
+            background: var(--gray-100);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .btn-icon:hover {
+            background: var(--gray-200);
+        }
+
+        /* Add Worker Form */
+        .add-worker-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 500;
+            color: var(--dark);
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--gray-300);
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        /* Status Indicators */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .status-online {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .status-offline {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: currentColor;
+        }
+
+        .status-online .status-dot {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .close-btn {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: var(--gray-100);
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .empty-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+        }
+
+        .empty-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 8px;
+        }
+
+        .empty-text {
+            color: var(--gray-700);
+            margin-bottom: 16px;
+        }
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--gray-200);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 16px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Worker Detail Modal */
+        .detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .detail-item {
+            background: var(--gray-100);
+            padding: 12px;
+            border-radius: 8px;
+        }
+
+        .detail-label {
+            font-size: 12px;
+            color: var(--gray-700);
+            margin-bottom: 4px;
+        }
+
+        .detail-value {
+            font-weight: 500;
+            color: var(--dark);
+        }
+
+        /* Activity Timeline */
+        .timeline {
+            margin-top: 16px;
+        }
+
+        .timeline-item {
+            display: flex;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .timeline-item:last-child {
+            border-bottom: none;
+        }
+
+        .timeline-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .timeline-content {
+            flex: 1;
+        }
+
+        .timeline-title {
+            font-weight: 500;
+            color: var(--dark);
+            margin-bottom: 4px;
+        }
+
+        .timeline-time {
+            font-size: 12px;
+            color: var(--gray-700);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header {
+                padding: 16px 20px;
+            }
+
+            .logo {
+                font-size: 36px;
+            }
+
+            .title h1 {
+                font-size: 24px;
+            }
+
+            .worker-card {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .worker-actions {
+                width: 100%;
+                justify-content: flex-end;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo-section">
+                <div class="logo">⚡</div>
+                <div class="title">
+                    <h1>NexusShift</h1>
+                    <p>Workforce Management & Productivity Platform</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value" id="totalWorkers">0</div>
+                <div class="stat-label">Total Workers</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="onlineWorkers">0</div>
+                <div class="stat-label">Online Now</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="activeWorkers">0</div>
+                <div class="stat-label">Active Sessions</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="serverStatus">
+                    <span class="status-badge status-online">
+                        <span class="status-dot"></span>
+                        Online
+                    </span>
+                </div>
+                <div class="stat-label">System Status</div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="content-grid">
+            <!-- Workers Section -->
+            <div class="workers-section">
+                <div class="section-header">
+                    <h2 class="section-title">Workers</h2>
+                    <div>
+                        <button class="btn btn-secondary" onclick="loadWorkers()">
+                            <span>🔄</span> Refresh
+                        </button>
+                        <button class="btn btn-primary" onclick="showAddWorkerModal()">
+                            <span>➕</span> Add Worker
+                        </button>
+                    </div>
+                </div>
+
+                <div id="workersList" class="worker-list">
+                    <!-- Workers will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Add Worker Section -->
+            <div class="add-worker-section">
+                <h2 class="section-title" style="margin-bottom: 20px;">Quick Add Worker</h2>
+
+                <form id="addWorkerForm" onsubmit="addWorker(event)">
+                    <div class="form-group">
+                        <label class="form-label">Worker Name</label>
+                        <input
+                            type="text"
+                            class="form-input"
+                            id="workerName"
+                            placeholder="Enter full name"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Email Address</label>
+                        <input
+                            type="email"
+                            class="form-input"
+                            id="workerEmail"
+                            placeholder="email@company.com"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Device ID</label>
+                        <input
+                            type="text"
+                            class="form-input"
+                            id="workerDeviceId"
+                            placeholder="device-001"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Department (Optional)</label>
+                        <input
+                            type="text"
+                            class="form-input"
+                            id="workerDepartment"
+                            placeholder="Engineering, Sales, etc."
+                        >
+                    </div>
+
+                    <button type="submit" class="btn btn-success" style="width: 100%;">
+                        <span>➕</span> Add Worker
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Worker Detail Modal -->
+    <div id="workerDetailModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Worker Details</h3>
+                <button class="close-btn" onclick="closeWorkerDetail()">×</button>
+            </div>
+            <div id="workerDetailContent">
+                <!-- Worker details will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:3000/api';
+        let workers = [];
+
+        // Load workers on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            loadWorkers();
+            setInterval(loadWorkers, 30000); // Auto-refresh every 30 seconds
+        });
+
+        // Load workers from API
+        async function loadWorkers() {
+            try {
+                const response = await fetch(`${API_BASE}/workers`);
+                workers = await response.json();
+                renderWorkers();
+                updateStats();
+            } catch (error) {
+                console.error('Failed to load workers:', error);
+                showEmptyState('error');
+            }
+        }
+
+        // Render workers list
+        function renderWorkers() {
+            const container = document.getElementById('workersList');
+
+            if (workers.length === 0) {
+                showEmptyState('no-workers');
+                return;
+            }
+
+            container.innerHTML = workers.map(worker => `
+                <div class="worker-card" onclick="showWorkerDetail('${worker.id}')">
+                    <div class="worker-avatar">
+                        ${worker.name.charAt(0).toUpperCase()}
+                    </div>
+                    <div class="worker-info">
+                        <div class="worker-name">${worker.name}</div>
+                        <div class="worker-email">${worker.email || 'No email'}</div>
+                        <div style="font-size: 12px; color: #6b7280; margin-top: 4px;">
+                            🖥️ ${worker.device_id}
+                        </div>
+                    </div>
+                    <div class="worker-status ${worker.is_active ? 'status-online' : 'status-offline'}">
+                        ${worker.is_active ? '● Active' : '○ Offline'}
+                    </div>
+                    <div class="worker-actions">
+                        <button class="btn-icon" onclick="event.stopPropagation(); editWorker('${worker.id}')">
+                            ✏️
+                        </button>
+                        <button class="btn-icon" onclick="event.stopPropagation(); deleteWorker('${worker.id}')">
+                            🗑️
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Update statistics
+        function updateStats() {
+            const total = workers.length;
+            const online = workers.filter(w => w.is_active).length;
+
+            document.getElementById('totalWorkers').textContent = total;
+            document.getElementById('onlineWorkers').textContent = online;
+            document.getElementById('activeWorkers').textContent = online;
+        }
+
+        // Show empty state
+        function showEmptyState(type) {
+            const container = document.getElementById('workersList');
+
+            if (type === 'no-workers') {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">👥</div>
+                        <div class="empty-title">No Workers Yet</div>
+                        <div class="empty-text">Add your first worker to get started with NexusShift</div>
+                        <button class="btn btn-primary" onclick="showAddWorkerModal()">
+                            <span>➕</span> Add Your First Worker
+                        </button>
+                    </div>
+                `;
+            } else if (type === 'loading') {
+                container.innerHTML = `
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        <div>Loading workers...</div>
+                    </div>
+                `;
+            } else {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">⚠️</div>
+                        <div class="empty-title">Connection Error</div>
+                        <div class="empty-text">Unable to connect to the server</div>
+                        <button class="btn btn-secondary" onclick="loadWorkers()">
+                            <span>🔄</span> Try Again
+                        </button>
+                    </div>
+                `;
+            }
+        }
+
+        // Add worker
+        async function addWorker(event) {
+            event.preventDefault();
+
+            const worker = {
+                name: document.getElementById('workerName').value,
+                email: document.getElementById('workerEmail').value,
+                device_id: document.getElementById('workerDeviceId').value,
+                department: document.getElementById('workerDepartment').value || null
+            };
+
+            try {
+                const response = await fetch(`${API_BASE}/workers`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(worker)
+                });
+
+                if (response.ok) {
+                    const newWorker = await response.json();
+                    workers.push(newWorker);
+                    renderWorkers();
+                    updateStats();
+
+                    // Reset form
+                    document.getElementById('addWorkerForm').reset();
+
+                    // Show success feedback
+                    alert(`✅ Worker "${worker.name}" added successfully!`);
+                } else {
+                    throw new Error('Failed to add worker');
+                }
+            } catch (error) {
+                console.error('Error adding worker:', error);
+                alert('❌ Failed to add worker. Please try again.');
+            }
+        }
+
+        // Show worker detail
+        function showWorkerDetail(workerId) {
+            const worker = workers.find(w => w.id === workerId);
+            if (!worker) return;
+
+            const modal = document.getElementById('workerDetailModal');
+            const content = document.getElementById('workerDetailContent');
+
+            content.innerHTML = `
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <div class="detail-label">Name</div>
+                        <div class="detail-value">${worker.name}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Email</div>
+                        <div class="detail-value">${worker.email || 'Not provided'}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Device ID</div>
+                        <div class="detail-value">${worker.device_id}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Status</div>
+                        <div class="detail-value">
+                            <span class="status-badge ${worker.is_active ? 'status-online' : 'status-offline'}">
+                                <span class="status-dot"></span>
+                                ${worker.is_active ? 'Active' : 'Offline'}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Registered</div>
+                        <div class="detail-value">${new Date(worker.created_at).toLocaleDateString()}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Worker ID</div>
+                        <div class="detail-value" style="font-family: monospace; font-size: 12px;">
+                            ${worker.id.substring(0, 8)}...
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 20px;">
+                    <button class="btn btn-primary" onclick="closeWorkerDetail()" style="width: 100%;">
+                        Close
+                    </button>
+                </div>
+            `;
+
+            modal.classList.add('active');
+        }
+
+        // Close worker detail
+        function closeWorkerDetail() {
+            document.getElementById('workerDetailModal').classList.remove('active');
+        }
+
+        // Edit worker (placeholder)
+        function editWorker(workerId) {
+            alert('Edit functionality coming soon! Worker ID: ' + workerId);
+        }
+
+        // Delete worker
+        async function deleteWorker(workerId) {
+            const worker = workers.find(w => w.id === workerId);
+            if (!worker) return;
+
+            if (confirm(`Are you sure you want to delete "${worker.name}"?`)) {
+                try {
+                    const response = await fetch(`${API_BASE}/workers/${workerId}`, {
+                        method: 'DELETE'
+                    });
+
+                    if (response.ok) {
+                        workers = workers.filter(w => w.id !== workerId);
+                        renderWorkers();
+                        updateStats();
+                        alert(`✅ Worker "${worker.name}" deleted successfully!`);
+                    } else {
+                        throw new Error('Failed to delete worker');
+                    }
+                } catch (error) {
+                    console.error('Error deleting worker:', error);
+                    alert('❌ Failed to delete worker. Please try again.');
+                }
+            }
+        }
+
+        // Show add worker modal (for future use)
+        function showAddWorkerModal() {
+            document.getElementById('workerName').focus();
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('workerDetailModal').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('workerDetailModal')) {
+                closeWorkerDetail();
+            }
+        });
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeWorkerDetail();
+            }
+        });
+    </script>
+</body>
+</html>

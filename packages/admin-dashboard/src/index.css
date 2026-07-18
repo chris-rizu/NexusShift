@@ -1,0 +1,99 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-primary: #404040;
+    --color-primary-hover: #505050;
+    --color-success: #737373;
+    --color-warning: #a3a3a3;
+    --color-danger: #525252;
+    --color-dark-bg: #fafafa;
+    --color-dark-card: #ffffff;
+    --color-dark-border: #e5e5e5;
+    --color-dark-hover: #f5f5f5;
+    --color-text-primary: #171717;
+    --color-text-secondary: #737373;
+    --color-text-tertiary: #a3a3a3;
+  }
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+  background-color: #fafafa;
+  color: #171717;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Class-based dark mode: driven by the `.dark` class on <html> */
+html.dark body {
+  background-color: #171717;
+  color: #fafafa;
+}
+
+html.dark ::-webkit-scrollbar-track {
+  background: #171717;
+}
+
+html.dark ::-webkit-scrollbar-thumb {
+  background: #404040;
+}
+
+html.dark ::-webkit-scrollbar-thumb:hover {
+  background: #525252;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #fafafa;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d4d4d4;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a3a3a3;
+}
+
+/* Smooth transitions */
+* {
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+/* Focus states */
+button:focus-visible, input:focus-visible, select:focus-visible {
+  outline: 2px solid #525252;
+  outline-offset: 2px;
+}
+
+/* Loading animation */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.spinner {
+  animation: spin 1s linear infinite;
+}
+
+/* Pulse animation for live indicators */
+@keyframes pulse-glow {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+.pulse-live {
+  animation: pulse-glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}

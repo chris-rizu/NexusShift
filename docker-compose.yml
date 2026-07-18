@@ -1,0 +1,125 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database (Alternative to Supabase for local development)
+  postgres:
+    image: postgres:15-alpine
+    container_name: espionage-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: espionage
+      POSTGRES_PASSWORD: espionage_dev_password
+      POSTGRES_DB: espionage
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./packages/supabase/migrations:/docker-entrypoint-initdb.d
+    ports:
+      - "5432:5432"
+    networks:
+      - espionage-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U espionage"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis for caching and queues
+  redis:
+    image: redis:7-alpine
+    container_name: espionage-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    networks:
+      - espionage-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Admin Dashboard
+  admin-dashboard:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: admin-dashboard
+    container_name: espionage-admin
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - VITE_SUPABASE_URL=${VITE_SUPABASE_URL:-https://qdyqfrltnorbavlnjaf.supabase.co}
+      - VITE_SUPABASE_ANON_KEY=${VITE_SUPABASE_ANON_KEY}
+      - ELECTRON_RUN_AS_NODE=1
+    ports:
+      - "3000:3000"
+    networks:
+      - espionage-network
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./packages/admin-dashboard/.env:/app/.env:ro
+    command: npm run dev
+
+  # Worker Agent (Example - would need unique configs per worker)
+  worker-agent:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: worker-agent
+    container_name: espionage-worker
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - VITE_SUPABASE_URL=${VITE_SUPABASE_URL:-https://qdyqfrltnorbavlnjaf.supabase.co}
+      - VITE_SUPABASE_ANON_KEY=${VITE_SUPABASE_ANON_KEY}
+      - SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_ROLE_KEY}
+      - SCREENSHOT_INTERVAL_MINUTES=${SCREENSHOT_INTERVAL_MINUTES:-5}
+      - IDLE_THRESHOLD_SECONDS=${IDLE_THRESHOLD_SECONDS:-600}
+    ports:
+      - "3001:3000"
+    networks:
+      - espionage-network
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./packages/worker-agent/.env:/app/.env:ro
+      - worker_screenshots:/app/screenshots
+    command: npm run dev
+
+  # pgAdmin for database management (optional)
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: espionage-pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@espionage.local
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    ports:
+      - "5050:80"
+    networks:
+      - espionage-network
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+
+networks:
+  espionage-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+    driver: local
+  pgadmin_data:
+    driver: local
+  worker_screenshots:
+    driver: local

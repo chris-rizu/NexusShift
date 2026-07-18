@@ -1,0 +1,50 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Build outputs
+dist/
+out/
+build/
+release/
+*.log
+*.tsbuildinfo
+
+# Code-signing certificates (never commit)
+*.pfx
+*.p12
+
+# Vercel
+.vercel/
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Electron
+*.dmg
+*.exe
+*.exe.blockmap
+*.deb
+*.rpm
+
+# Screenshots (local testing)
+screenshots/
+
+# Claude
+.claude/

@@ -1,0 +1,28 @@
+{
+  "name": "espionage",
+  "version": "1.0.0",
+  "description": "Remote Worker Monitoring System - Worker Agent and Admin Dashboard",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:worker": "npm run dev --workspace=packages/worker-agent",
+    "dev:admin": "npm run dev --workspace=packages/admin-dashboard",
+    "build:worker": "npm run build --workspace=packages/worker-agent",
+    "build:admin": "npm run build --workspace=packages/admin-dashboard",
+    "build:all": "npm run build:worker && npm run build:admin",
+    "dist:worker": "npm run dist --workspace=packages/worker-agent",
+    "dist:admin": "npm run dist --workspace=packages/admin-dashboard",
+    "dist:all": "npm run dist:worker && npm run dist:admin",
+    "clean": "rm -rf node_modules packages/*/node_modules packages/*/dist packages/*/out"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "typescript": "^5.3.3"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  }
+}
