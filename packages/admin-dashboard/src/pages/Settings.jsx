@@ -2,8 +2,10 @@ import { useState, useEffect } from 'react'
 import { toast } from 'react-hot-toast'
 import { Settings as SettingsIcon, Camera, AlertTriangle, Database, Bell, Shield } from 'lucide-react'
 import { updateSettings, getSettings } from '../api'
+import { useT } from '../lib/i18n'
 
 function Settings() {
+  const t = useT()
   const [settings, setSettings] = useState({
     // General Settings
     companyName: 'Acme Corporation',
@@ -121,21 +123,21 @@ function Settings() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-neutral-900 dark:text-white mb-1">Settings</h1>
-          <p className="text-sm text-neutral-500 dark:text-neutral-400">Configure your Nexus Shift workspace</p>
+          <h1 className="text-2xl font-bold text-neutral-900 dark:text-white mb-1">{t('pg.settings.title')}</h1>
+          <p className="text-sm text-neutral-500 dark:text-neutral-400">{t('pg.settings.sub')}</p>
         </div>
         <div className="flex items-center gap-3">
           <button
             onClick={handleReset}
             className="px-4 py-2.5 text-sm text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white border border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-700 transition"
           >
-            Reset to Defaults
+            {t('set.reset')}
           </button>
           <button
             onClick={handleSave}
             className="px-6 py-2.5 text-sm text-white bg-neutral-900 dark:bg-neutral-700 hover:bg-neutral-700 dark:hover:bg-neutral-600 transition"
           >
-            Save Changes
+            {t('set.save')}
           </button>
         </div>
       </div>
@@ -144,7 +146,7 @@ function Settings() {
         {/* General Settings */}
         <div className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 p-5">
           <h2 className="text-lg font-semibold text-neutral-900 dark:text-white mb-4 flex items-center gap-2">
-            <SettingsIcon className="w-5 h-5" /> General Settings
+            <SettingsIcon className="w-5 h-5" /> {t('set.general')}
           </h2>
 
           <div className="space-y-4">
@@ -212,7 +214,7 @@ function Settings() {
         {/* Monitoring Settings */}
         <div className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 p-5">
           <h2 className="text-lg font-semibold text-neutral-900 dark:text-white mb-4 flex items-center gap-2">
-            <Camera className="w-5 h-5" /> Monitoring Settings
+            <Camera className="w-5 h-5" /> {t('set.monitoring')}
           </h2>
 
           <div className="space-y-4">
@@ -275,7 +277,7 @@ function Settings() {
         {/* Alert Settings */}
         <div className="bg-white border border-neutral-200 p-5">
           <h2 className="text-lg font-semibold text-neutral-900 mb-4 flex items-center gap-2">
-            <AlertTriangle className="w-5 h-5" /> Alert Settings
+            <AlertTriangle className="w-5 h-5" /> {t('set.alerts')}
           </h2>
 
           <div className="space-y-3">
@@ -365,7 +367,7 @@ function Settings() {
         {/* Data Retention */}
         <div className="bg-white border border-neutral-200 p-5">
           <h2 className="text-lg font-semibold text-neutral-900 mb-4 flex items-center gap-2">
-            <Database className="w-5 h-5" /> Data Retention
+            <Database className="w-5 h-5" /> {t('set.retention')}
           </h2>
 
           <div className="space-y-4">
@@ -423,7 +425,7 @@ function Settings() {
         {/* Notifications */}
         <div className="bg-white border border-neutral-200 p-5">
           <h2 className="text-lg font-semibold text-neutral-900 mb-4 flex items-center gap-2">
-            <Bell className="w-5 h-5" /> Notifications
+            <Bell className="w-5 h-5" /> {t('set.notifications')}
           </h2>
 
           <div className="space-y-3">
@@ -499,7 +501,7 @@ function Settings() {
         {/* Security */}
         <div className="bg-white border border-neutral-200 p-5">
           <h2 className="text-lg font-semibold text-neutral-900 mb-4 flex items-center gap-2">
-            <Shield className="w-5 h-5" /> Security
+            <Shield className="w-5 h-5" /> {t('set.security')}
           </h2>
 
           <div className="space-y-3">

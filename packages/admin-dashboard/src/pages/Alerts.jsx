@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useT } from '../lib/i18n'
 import { toast } from 'react-hot-toast'
 import { AlertTriangle, Check, Download, Eye, Mail, Search, X } from 'lucide-react'
 import Modal from '../components/Modal'
@@ -60,6 +61,7 @@ const mockAlerts = [
 ]
 
 function Alerts() {
+  const t = useT()
   const [alerts, setAlerts] = useState([])
   const [searchTerm, setSearchTerm] = useState('')
   const [typeFilter, setTypeFilter] = useState('all')
@@ -237,7 +239,7 @@ function Alerts() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-neutral-900 dark:text-white mb-1">Alerts Center</h1>
+          <h1 className="text-2xl font-bold text-neutral-900 dark:text-white mb-1">{t('pg.alerts.title')}</h1>
           <p className="text-sm text-neutral-500 dark:text-neutral-400">Monitor and respond to workforce alerts and incidents</p>
         </div>
         <div className="flex items-center gap-3">

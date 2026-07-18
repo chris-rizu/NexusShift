@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useT } from '../lib/i18n'
 
 // Mock export history
 const mockExportHistory = [
@@ -18,6 +19,7 @@ const exportOptions = [
 ]
 
 function ExportData() {
+  const t = useT()
   const [exportHistory] = useState([])
   const [selectedOption, setSelectedOption] = useState(null)
   const [selectedFormat, setSelectedFormat] = useState('CSV')
@@ -39,8 +41,8 @@ function ExportData() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-neutral-900 mb-1">Export Data</h1>
-          <p className="text-sm text-neutral-500">Export workforce data in various formats</p>
+          <h1 className="text-2xl font-bold text-neutral-900 mb-1">{t('pg.export.title')}</h1>
+          <p className="text-sm text-neutral-500">{t('pg.export.sub')}</p>
         </div>
         <div className="flex items-center gap-3">
           <button className="px-4 py-2 text-sm text-neutral-600 hover:text-neutral-900 border border-neutral-300 hover:bg-neutral-100 transition">

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useT } from '../lib/i18n'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-hot-toast'
 import { Eye, Settings, MoreVertical, Download, MessageSquare } from 'lucide-react'
@@ -7,6 +8,7 @@ import { exportToCSV, generateFilename, exportFormatters } from '../utils/export
 import { getWorkers, bulkUpdateWorkers, messageWorkers } from '../api'
 
 function Workers() {
+  const t = useT()
   const navigate = useNavigate()
   const [workers, setWorkers] = useState([])
   const [searchTerm, setSearchTerm] = useState('')
@@ -158,7 +160,7 @@ function Workers() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-neutral-900 dark:text-white mb-1">Workers Management</h1>
+          <h1 className="text-2xl font-bold text-neutral-900 dark:text-white mb-1">{t('pg.workers.title')}</h1>
           <p className="text-sm text-neutral-500 dark:text-neutral-400">Monitor and manage your workforce</p>
         </div>
         <div className="flex items-center gap-3">

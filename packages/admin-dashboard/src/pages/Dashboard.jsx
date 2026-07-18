@@ -4,9 +4,11 @@ import { toast } from 'react-hot-toast'
 import { Users, Clock, AlertTriangle } from 'lucide-react'
 import { exportToCSV, generateFilename, exportFormatters } from '../utils/export'
 import { getWorkers, getAlerts } from '../api'
+import { useT } from '../lib/i18n'
 
 function Dashboard() {
   const navigate = useNavigate()
+  const t = useT()
   const [stats, setStats] = useState({
     totalWorkers: 0,
     activeWorkers: 0,
@@ -70,17 +72,17 @@ function Dashboard() {
 
   const handleExport = async () => {
     try {
-      toast.loading('Preparing export...', { id: 'export' })
+      toast.loading(t('toast.preparingExport'), { id: 'export' })
       const formattedWorkers = workers.map(exportFormatters.workers)
       const result = exportToCSV(formattedWorkers, generateFilename('workers', 'csv'))
 
       if (result.success) {
-        toast.success('Worker data exported successfully!', { id: 'export' })
+        toast.success(t('toast.exportSuccess'), { id: 'export' })
       } else {
-        toast.error('Export failed. Please try again.', { id: 'export' })
+        toast.error(t('toast.exportFail'), { id: 'export' })
       }
     } catch (error) {
-      toast.error('Export failed. Please try again.', { id: 'export' })
+      toast.error(t('toast.exportFail'), { id: 'export' })
       console.error('Export error:', error)
     }
   }
@@ -91,40 +93,36 @@ function Dashboard() {
       <div className="grid grid-cols-4 gap-4">
         <div className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 p-5">
           <div className="flex items-center justify-between mb-3">
-            <span className="text-neutral-500 dark:text-neutral-400 text-sm">Total Workers</span>
+            <span className="text-neutral-500 dark:text-neutral-400 text-sm">{t('dash.totalWorkers')}</span>
             <Users className="w-8 h-8 text-neutral-500 dark:text-neutral-400" />
           </div>
           <div className="text-3xl font-bold text-neutral-900 dark:text-white">{stats.totalWorkers}</div>
-          <div className="text-xs text-neutral-400 mt-1">+2 from last week</div>
         </div>
 
         <div className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 p-5">
           <div className="flex items-center justify-between mb-3">
-            <span className="text-neutral-500 dark:text-neutral-400 text-sm">Currently Active</span>
+            <span className="text-neutral-500 dark:text-neutral-400 text-sm">{t('dash.currentlyActive')}</span>
             <div className="w-8 h-8 flex items-center justify-center">
               <div className="w-3 h-3 bg-green-500 rounded-full pulse-live"></div>
             </div>
           </div>
           <div className="text-3xl font-bold text-neutral-900 dark:text-white">{stats.activeWorkers}</div>
-          <div className="text-xs text-neutral-400 mt-1">75% of workforce</div>
         </div>
 
         <div className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 p-5">
           <div className="flex items-center justify-between mb-3">
-            <span className="text-neutral-500 dark:text-neutral-400 text-sm">Total Idle</span>
+            <span className="text-neutral-500 dark:text-neutral-400 text-sm">{t('dash.totalIdle')}</span>
             <Clock className="w-8 h-8 text-neutral-500 dark:text-neutral-400" />
           </div>
           <div className="text-3xl font-bold text-neutral-600 dark:text-neutral-300">{stats.idleWorkers}</div>
-          <div className="text-xs text-neutral-400 mt-1">17% of workforce</div>
         </div>
 
         <div className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 p-5">
           <div className="flex items-center justify-between mb-3">
-            <span className="text-neutral-500 dark:text-neutral-400 text-sm">Alerts Today</span>
+            <span className="text-neutral-500 dark:text-neutral-400 text-sm">{t('dash.alertsToday')}</span>
             <AlertTriangle className="w-8 h-8 text-neutral-500 dark:text-neutral-400" />
           </div>
           <div className="text-3xl font-bold text-neutral-900 dark:text-white">{stats.alertsToday}</div>
-          <div className="text-xs text-neutral-400 mt-1">2 unresolved</div>
         </div>
       </div>
 
@@ -134,9 +132,9 @@ function Dashboard() {
         <div className="col-span-2">
           <div className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 p-5">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold text-neutral-900 dark:text-white">Live Worker Status</h2>
+              <h2 className="text-lg font-semibold text-neutral-900 dark:text-white">{t('dash.liveStatus')}</h2>
               <button onClick={handleExport} className="text-sm text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition">
-                Export →
+                {t('common.exportArrow')}
               </button>
             </div>
 
@@ -154,19 +152,19 @@ function Dashboard() {
                       <p className="text-xs text-neutral-500 dark:text-neutral-400">{worker.department}</p>
                     </div>
                     <span className={`px-2 py-1 text-xs font-medium ${getStatusBg(worker.status)} ${getStatusColor(worker.status)}`}>
-                      {worker.status.charAt(0).toUpperCase() + worker.status.slice(1)}
+                      {t('status.' + worker.status)}
                     </span>
                   </div>
 
                   {/* Thumbnail */}
                   <div className="bg-neutral-100 dark:bg-neutral-700 border border-neutral-200 dark:border-neutral-700 aspect-video mb-3 flex items-center justify-center">
-                    <span className="text-neutral-400 dark:text-neutral-500 text-sm">Latest Screenshot</span>
+                    <span className="text-neutral-400 dark:text-neutral-500 text-sm">{t('dash.latestScreenshot')}</span>
                   </div>
 
                   {/* Shift Progress */}
                   <div className="mb-2">
                     <div className="flex items-center justify-between text-xs mb-1">
-                      <span className="text-neutral-500 dark:text-neutral-400">Shift Progress</span>
+                      <span className="text-neutral-500 dark:text-neutral-400">{t('dash.shiftProgress')}</span>
                       <span className="text-neutral-600 dark:text-neutral-300">{worker.shiftProgress}%</span>
                     </div>
                     <div className="w-full bg-neutral-200 dark:bg-neutral-700 h-1.5">
@@ -181,7 +179,7 @@ function Dashboard() {
 
                   {/* Last Active */}
                   <div className="text-xs text-neutral-400 dark:text-neutral-500">
-                    Last active: {worker.lastActive}
+                    {t('dash.lastActive')} {worker.lastActive}
                   </div>
                 </div>
               ))}
@@ -193,9 +191,9 @@ function Dashboard() {
         <div>
           <div className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 p-5">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold text-neutral-900 dark:text-white">Recent Alerts</h2>
+              <h2 className="text-lg font-semibold text-neutral-900 dark:text-white">{t('dash.recentAlerts')}</h2>
               <button onClick={() => navigate('/alerts')} className="text-sm text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition">
-                View All →
+                {t('common.viewAll')}
               </button>
             </div>
 
@@ -222,7 +220,7 @@ function Dashboard() {
             </div>
 
             <button onClick={() => navigate('/alerts')} className="w-full mt-4 py-2 text-sm text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white border border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition">
-              View All Alerts →
+              {t('dash.viewAllAlerts')}
             </button>
           </div>
         </div>

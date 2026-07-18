@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useT } from '../lib/i18n'
 import { supabase } from '../lib/supabase'
 
 const activityTypes = [
@@ -15,6 +16,7 @@ const eventDetails = {
 }
 
 function ActivityLogs() {
+  const t = useT()
   const [activityLogs, setActivityLogs] = useState([])
   const [loading, setLoading] = useState(true)
   const [typeFilter, setTypeFilter] = useState('all')
@@ -78,8 +80,8 @@ function ActivityLogs() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-neutral-900 mb-1">Activity Logs</h1>
-          <p className="text-sm text-neutral-500">Detailed activity tracking for all workers</p>
+          <h1 className="text-2xl font-bold text-neutral-900 mb-1">{t('pg.activity.title')}</h1>
+          <p className="text-sm text-neutral-500">{t('pg.activity.sub')}</p>
         </div>
         <div className="flex items-center gap-3">
           <button className="px-4 py-2 text-sm text-neutral-600 hover:text-neutral-900 border border-neutral-300 hover:bg-neutral-100 transition">

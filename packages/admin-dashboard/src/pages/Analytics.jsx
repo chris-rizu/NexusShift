@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useT } from '../lib/i18n'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-hot-toast'
 import { Download, TrendingUp, Clock, Users, BarChart3 } from 'lucide-react'
@@ -17,6 +18,7 @@ const dailyTrendData = []
 const workers = []
 
 function Analytics() {
+  const t = useT()
   const navigate = useNavigate()
   const [selectedWorkers, setSelectedWorkers] = useState([])
   const [timeRange, setTimeRange] = useState('today')
@@ -80,8 +82,8 @@ function Analytics() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-neutral-900 mb-1">Workforce Analytics</h1>
-          <p className="text-sm text-neutral-500">Monitor worker productivity and screen activity patterns</p>
+          <h1 className="text-2xl font-bold text-neutral-900 mb-1">{t('pg.analytics.title')}</h1>
+          <p className="text-sm text-neutral-500">{t('pg.analytics.sub')}</p>
         </div>
         <div className="flex items-center gap-3">
           <select

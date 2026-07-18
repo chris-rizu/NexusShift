@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useT } from '../lib/i18n'
 import { toast } from 'react-hot-toast'
 import { TrendingUp, TrendingDown, Minus, Download, Zap, Users, Calendar } from 'lucide-react'
 import { exportToCSV, generateFilename } from '../utils/export'
@@ -22,6 +23,7 @@ const departmentAverages = [
 ]
 
 function Performance() {
+  const t = useT()
   const [performanceData] = useState([])
   const [selectedWorker, setSelectedWorker] = useState(null)
   const [departmentFilter, setDepartmentFilter] = useState('all')
@@ -90,7 +92,7 @@ function Performance() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-neutral-900 dark:text-white mb-1">Performance Metrics</h1>
+          <h1 className="text-2xl font-bold text-neutral-900 dark:text-white mb-1">{t('pg.performance.title')}</h1>
           <p className="text-sm text-neutral-500 dark:text-neutral-400">Track and analyze workforce productivity and efficiency</p>
         </div>
         <div className="flex items-center gap-3">

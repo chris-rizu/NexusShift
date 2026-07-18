@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useT } from '../lib/i18n'
 
 // Mock reports data
 const mockReports = [
@@ -54,6 +55,7 @@ const reportTemplates = [
 ]
 
 function Reports() {
+  const t = useT()
   const [reports] = useState([])
   const [selectedReport, setSelectedReport] = useState(null)
 
@@ -71,8 +73,8 @@ function Reports() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-neutral-900 mb-1">Reports Center</h1>
-          <p className="text-sm text-neutral-500">Generate and manage workforce reports</p>
+          <h1 className="text-2xl font-bold text-neutral-900 mb-1">{t('pg.reports.title')}</h1>
+          <p className="text-sm text-neutral-500">{t('pg.reports.sub')}</p>
         </div>
         <div className="flex items-center gap-3">
           <button className="px-4 py-2 text-sm text-neutral-600 hover:text-neutral-900 border border-neutral-300 hover:bg-neutral-100 transition">

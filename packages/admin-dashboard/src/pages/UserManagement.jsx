@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useT } from '../lib/i18n'
 import { toast } from 'react-hot-toast'
 import { Users, Search, Download, Upload, Edit, Trash2, RefreshCw, X } from 'lucide-react'
 import Modal from '../components/Modal'
@@ -74,6 +75,7 @@ const permissions = [
 ]
 
 function UserManagement() {
+  const t = useT()
   const [users, setUsers] = useState([])
   const [selectedUser, setSelectedUser] = useState(null)
   const [searchTerm, setSearchTerm] = useState('')
@@ -248,7 +250,7 @@ function UserManagement() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-neutral-900 dark:text-white mb-1">User Management</h1>
+          <h1 className="text-2xl font-bold text-neutral-900 dark:text-white mb-1">{t('pg.users.title')}</h1>
           <p className="text-sm text-neutral-500 dark:text-neutral-400">Manage user accounts and permissions</p>
         </div>
         <div className="flex items-center gap-3">
@@ -311,7 +313,7 @@ function UserManagement() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-neutral-900 mb-1">User Management</h1>
-          <p className="text-sm text-neutral-500">Manage system users and their permissions</p>
+          <p className="text-sm text-neutral-500">{t('pg.users.sub')}</p>
         </div>
         <div className="flex items-center gap-3">
           <button className="px-4 py-2 text-sm text-neutral-600 hover:text-neutral-900 border border-neutral-300 hover:bg-neutral-100 transition">

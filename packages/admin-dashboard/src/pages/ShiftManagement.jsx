@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useT } from '../lib/i18n'
 
 // Mock shift templates
 const mockShiftTemplates = [
@@ -17,6 +18,7 @@ const mockShiftAssignments = [
 ]
 
 function ShiftManagement() {
+  const t = useT()
   const [shiftTemplates] = useState([])
   const [shiftAssignments] = useState([])
   const [activeTab, setActiveTab] = useState('templates')
@@ -26,8 +28,8 @@ function ShiftManagement() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-neutral-900 mb-1">Shift Management</h1>
-          <p className="text-sm text-neutral-500">Create and manage shift templates and worker assignments</p>
+          <h1 className="text-2xl font-bold text-neutral-900 mb-1">{t('pg.shiftmgmt.title')}</h1>
+          <p className="text-sm text-neutral-500">{t('pg.shiftmgmt.sub')}</p>
         </div>
         <div className="flex items-center gap-3">
           <button className="px-4 py-2 text-sm text-neutral-600 hover:text-neutral-900 border border-neutral-300 hover:bg-neutral-100 transition">

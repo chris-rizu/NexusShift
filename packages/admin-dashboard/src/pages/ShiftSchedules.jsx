@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useT } from '../lib/i18n'
 
 // Mock shift schedules data
 const mockSchedules = [
@@ -43,6 +44,7 @@ const mockSchedules = [
 const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
 
 function ShiftSchedules() {
+  const t = useT()
   const [schedules] = useState([])
   const [viewMode, setViewMode] = useState('weekly')
   const [selectedWeek, setSelectedWeek] = useState('current')
@@ -59,8 +61,8 @@ function ShiftSchedules() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-neutral-900 mb-1">Shift Schedules</h1>
-          <p className="text-sm text-neutral-500">Manage and monitor workforce shift schedules</p>
+          <h1 className="text-2xl font-bold text-neutral-900 mb-1">{t('pg.schedules.title')}</h1>
+          <p className="text-sm text-neutral-500">{t('pg.schedules.sub')}</p>
         </div>
         <div className="flex items-center gap-3">
           <button className="px-4 py-2 text-sm text-white bg-neutral-900 hover:bg-neutral-700 transition">
