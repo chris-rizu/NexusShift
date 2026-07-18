@@ -1,5 +1,6 @@
 import { NavLink } from 'react-router-dom'
 import { useUserEmail } from '../lib/useUser'
+import { useT } from '../lib/i18n'
 import {
   Menu,
   LayoutDashboard,
@@ -40,6 +41,7 @@ const Icon = ({ iconName, size = 20 }) => {
 
 function Sidebar({ collapsed, navigationSections, currentView, onNavigate, onToggle, darkMode = false }) {
   const userEmail = useUserEmail()
+  const t = useT()
   return (
     <aside
       className={`flex flex-col border-r transition-all duration-300 ${
@@ -52,7 +54,7 @@ function Sidebar({ collapsed, navigationSections, currentView, onNavigate, onTog
           {!collapsed && (
             <div className="flex-1">
               <h1 className={`text-xl font-semibold ${darkMode ? 'text-white' : 'text-neutral-900'}`}>Nexus Shift</h1>
-              <p className={`text-xs ${darkMode ? 'text-neutral-400' : 'text-neutral-500'}`}>Workforce Management</p>
+              <p className={`text-xs ${darkMode ? 'text-neutral-400' : 'text-neutral-500'}`}>{t('brand.subtitle')}</p>
             </div>
           )}
           <button
@@ -80,7 +82,7 @@ function Sidebar({ collapsed, navigationSections, currentView, onNavigate, onTog
               <h3 className={`text-xs font-semibold uppercase tracking-wider mb-2 px-3 ${
                 darkMode ? 'text-neutral-500' : 'text-neutral-400'
               }`}>
-                {section.title}
+                {t('sec.' + section.title)}
               </h3>
             )}
 
@@ -101,7 +103,7 @@ function Sidebar({ collapsed, navigationSections, currentView, onNavigate, onTog
                 <Icon iconName={item.icon} size={18} />
                 {!collapsed && (
                   <>
-                    <span className="flex-1 text-left">{item.label}</span>
+                    <span className="flex-1 text-left">{t('nav.' + item.id)}</span>
                     {item.badge > 0 && (
                       <span className="bg-neutral-900 text-white text-xs px-2 py-0.5">
                         {item.badge}

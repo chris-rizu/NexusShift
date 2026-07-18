@@ -1,5 +1,7 @@
 # NexusShift — Workforce Monitoring Platform
 
+*日本語版は [README.ja.md](README.ja.md) をご覧ください.*
+
 NexusShift is a transparent, consent-based workforce monitoring system. It has two parts:
 
 - **Worker Agent** — an installable desktop app (Electron) that, *after the employee gives on-screen consent*, captures periodic screenshots of every monitor and tracks active/idle time.

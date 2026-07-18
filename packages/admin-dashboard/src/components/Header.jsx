@@ -1,11 +1,14 @@
-import { Bell, Sun, Moon, Search, LogOut } from 'lucide-react'
+import { Bell, Sun, Moon, Search, LogOut, Languages } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import { useUserEmail } from '../lib/useUser'
+import { useT, useLang } from '../lib/i18n'
 
 function Header({ onToggleSidebar, alertsCount = 0, darkMode = false, onToggleDarkMode }) {
   const navigate = useNavigate()
   const userEmail = useUserEmail()
+  const t = useT()
+  const { lang, setLang } = useLang()
 
   return (
     <header className={`border-b px-6 py-4 ${
@@ -28,7 +31,7 @@ function Header({ onToggleSidebar, alertsCount = 0, darkMode = false, onToggleDa
           <div className="relative">
             <input
               type="text"
-              placeholder="Search workers, alerts, schedules..."
+              placeholder={t('header.search')}
               className={`w-80 border px-4 py-2 pl-10 text-sm focus:outline-none ${
                 darkMode
                   ? 'bg-neutral-800 border-neutral-600 text-neutral-100 placeholder-neutral-500 focus:border-neutral-500'
@@ -56,6 +59,18 @@ function Header({ onToggleSidebar, alertsCount = 0, darkMode = false, onToggleDa
             )}
           </button>
 
+          {/* Language Toggle */}
+          <button
+            onClick={() => setLang(lang === 'en' ? 'ja' : 'en')}
+            title="Language / 言語"
+            className={`flex items-center gap-2 px-3 py-2 hover:bg-neutral-100 transition rounded-lg ${
+              darkMode ? 'text-neutral-400 hover:text-white hover:bg-neutral-800' : 'text-neutral-500 hover:text-neutral-900'
+            }`}
+          >
+            <Languages className="w-5 h-5" />
+            <span className="text-sm">{lang === 'en' ? '日本語' : 'EN'}</span>
+          </button>
+
           {/* Light/Dark Mode Toggle */}
           <button
             onClick={onToggleDarkMode}
@@ -66,12 +81,12 @@ function Header({ onToggleSidebar, alertsCount = 0, darkMode = false, onToggleDa
             {darkMode ? (
               <>
                 <Sun className="w-5 h-5" />
-                <span className="text-sm">Light</span>
+                <span className="text-sm">{t('header.light')}</span>
               </>
             ) : (
               <>
                 <Moon className="w-5 h-5" />
-                <span className="text-sm">Dark</span>
+                <span className="text-sm">{t('header.dark')}</span>
               </>
             )}
           </button>
@@ -82,7 +97,7 @@ function Header({ onToggleSidebar, alertsCount = 0, darkMode = false, onToggleDa
           }`}>
             <div className="text-right">
               <p className={`text-sm font-medium ${darkMode ? 'text-white' : 'text-neutral-900'}`}>{userEmail || 'Admin'}</p>
-              <p className={`text-xs ${darkMode ? 'text-neutral-400' : 'text-neutral-500'}`}>Administrator</p>
+              <p className={`text-xs ${darkMode ? 'text-neutral-400' : 'text-neutral-500'}`}>{t('header.role')}</p>
             </div>
             <div className={`w-8 h-8 flex items-center justify-center ${
               darkMode ? 'bg-neutral-700' : 'bg-neutral-900'
@@ -91,7 +106,7 @@ function Header({ onToggleSidebar, alertsCount = 0, darkMode = false, onToggleDa
             </div>
             <button
               onClick={() => supabase.auth.signOut()}
-              title="Sign out"
+              title={t('header.signout')}
               className={`p-2 transition ${darkMode ? 'text-neutral-400 hover:text-white' : 'text-neutral-500 hover:text-neutral-900'}`}
             >
               <LogOut className="w-5 h-5" />
